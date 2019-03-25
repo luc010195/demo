@@ -1,0 +1,31 @@
+<?php
+Class News extends MY_Controller {
+	function __construct() {
+		parent::__construct();
+		//load ra file model
+		$this->load->model('news_model');
+	}
+	function index() {
+
+		//lay id bài viết muon xem
+		$id   = $this->uri->rsegment(3);
+		$news = $this->news_model->get_info($id);
+
+		if (!$news) {redirect();
+		}
+
+		$this->data['news'] = $news;
+
+		//lấy danh sách ảnh sản phẩm kèm theo
+		// cập nhật lại lượt xem
+		$data               = array();
+		$data['count_view'] = $news->count_view+1;
+		$this->news_model->update($news->id, $data);
+
+		$this->data['temp'] = 'site/news/index';
+		$this->load->view('site/layout', $this->data);
+	}
+
+}
+
+?>
